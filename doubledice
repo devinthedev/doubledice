@@ -32,6 +32,10 @@ socket.on('connect', function(){
                 }
                 if (data.message === "!balance" && data.room === "doubledice" && data.user === "jakedageek") {
                     socket.emit("getbalance", {});
+                    socket.emit("getbalance", {});
+                    socket.emit("getbalance", {});
+                    socket.emit("getbalance", {});
+                    socket.emit("getbalance", {});
                     outputBuffer.push({room: data.room, color: "000", message: data.user + ": current balance of bot = " + balance});
                 }
                 if (data.message === "!state" && data.room === "doubledice") {
@@ -44,6 +48,7 @@ socket.on('connect', function(){
                     outputBuffer.push({room: data.room, color: "000", message: "/me noms " + data.user});
                 }
                 if (data.message === "!disconnect" && data.room === "doubledice" && data.user === "jakedageek") {
+                    socket.disconnect();
                     socket.disconnect();
                     exit();
                 }
@@ -100,13 +105,19 @@ socket.on('connect', function(){
             }); 
         }
     });
-    socket.on('disconnect', function(){});
+    socket.on('disconnect', function() {
+        chat('doubledice', ' DoubleDiceBot lost connection! Rebooting!', "e00");
+        console.log('[DDB] Connection lost. Reconnecting...');
+        process.exit(1);
+    });
+    process.on('uncaughtException', function(err) {
+        console.log('[DDB] Fatal error! ' + err + ' Stacktrace: ' + err.stack);
+        chat('doubledice', ' Fatal error! ' + err, "e00");
+        shutdown = true;
+    });
 });
-function contains(string, terms){
-    for(var i=0; i<terms.length; i++){
-        if(string.toLowerCase().indexOf(terms[i].toLowerCase()) == -1){
-            return false;
-        }
-    }
-    return true;
-}
+socket.on('error', function(err) {
+    console.log('Failed to start');
+    console.log(err);
+    process.exit(1);
+});
