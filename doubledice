@@ -31,10 +31,6 @@ socket.on('connect', function(){
                     outputBuffer.push({room: data.room, color: "000", message: data.user + ": doubledice!"});
                 }
                 if (data.message === "!balance" && data.room === "doubledice" && data.user === "jakedageek") {
-                    socket.emit("getbalance", {}); //This may be unneccessary 
-                    socket.emit("getbalance", {});
-                    socket.emit("getbalance", {}); //Don't think it needs to be in there 5 times.
-                    socket.emit("getbalance", {});
                     socket.emit("getbalance", {});
                     outputBuffer.push({room: data.room, color: "000", message: data.user + ": current balance of bot = " + balance});
                 }
@@ -48,7 +44,6 @@ socket.on('connect', function(){
                     outputBuffer.push({room: data.room, color: "000", message: "/me noms " + data.user});
                 }
                 if (data.message === "!disconnect" && data.room === "doubledice" && data.user === "jakedageek") {
-                    socket.disconnect();
                     socket.disconnect();
                     exit();
                 }
